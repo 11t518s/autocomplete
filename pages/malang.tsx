@@ -1,7 +1,29 @@
-import React from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import AutoComplete from "../components/AutoComplete";
 
 const Malang: React.VFC = () => {
-  return <><div>malang</div></>
+  const [autoCompleteList, setAutoCompleteList] = useState<any>([]);
 
-}
-export default Malang
+  useEffect(() => {
+    axios.get("http://localhost:3000/items").then((e) =>
+      setAutoCompleteList(
+        e.data.map((item: any) => ({
+          searchName: item.name,
+          displayName: `${item.id} - ${item.name}`,
+        }))
+      )
+    );
+  }, []);
+
+  return (
+    <>
+      <AutoComplete
+        autoCompleteList={autoCompleteList}
+        commonAutoCompleteListBackgroundColor={"yellow"}
+        focusedAutoCompleteListBackgroundColor={"blue"}
+      />
+    </>
+  );
+};
+export default Malang;
